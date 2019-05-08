@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 radius_earth = 6371000
 mass_earth = 5.972*(10**24)
 G = 6.67*(10**-11)
-time_step = 100
+time_step = 3600
 
 
 
@@ -131,6 +131,7 @@ def acceleration(position_x, position_y, particles):
 
 def run_sim(time_step,run_time,planets,planet_draw_data):
     start_time = 0
+
     while start_time < run_time:
         start_time += time_step
         for planet in planets:
@@ -145,26 +146,35 @@ def run_sim(time_step,run_time,planets,planet_draw_data):
 def draw_planets(planets, planet_draw_data):
     for planet in planets:
         plt.plot(planet_draw_data[planet][0],planet_draw_data[planet][1], label = planet.name)
-
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
     plt.legend()
     plt.show()
 
 # planets defined here
+Mercury = particle('Mercury', 0.33e24,0 , 57.9e9, 1, 0, 47.4e3)
+Venus = particle('Venus',4.87e24, 0 , 1,-108.2e9  , 35e3 , 0)
 Earth = particle('Earth',mass_earth , radius_earth , 149.6e9 , 1,0,30000)
+Moon = particle('Moon' , 0.073e24 , 0, 149.6e9 + 0.384e9, 0  ,0, 31000)
+Mars = particle('Mars', 0.642e24, 0, 1, 227.9e9, 24.1e3, 0 )
+Jupiter = particle('Jupiter', 1898e24, 0, 778.6e9, 0, 0, 13e3 )
+Saturn = particle('Saturn', 568e24, 0,-1433.5e9,0, 0,-9.7e3 )
+Uranus =  particle('Uranus', 86.8e24, 0, 0, 2872.5e9, 6.8e3,0)
+Neptune = particle('Neptune', 102e24, 0, -4495.5e9, 0, 0,5.4e3)
 Sun = particle('Sun',2e30, radius_earth , 1 , 1,0,0)
-test = particle('test',0.5*mass_earth, radius_earth , 4*149.6e9 , 1,-2000,-9000)
-test1 = particle('test1',0.5*mass_earth, radius_earth , 5*149.6e9 , 1,-2000,-9000)
-test2 = particle('test2',0.5*mass_earth, radius_earth , 6*149.6e9 , 1,-7000,-15000)
-test3 = particle('test3',0.5*mass_earth, radius_earth , 7*149.6e9 , 1,-9000,-8000)
+
+
+# test = particle('test',0.5*mass_earth, radius_earth , 4*149.6e9 , 1,-2000,-9000)
+# test1 = particle('test1',0.5*mass_earth, radius_earth , 5*149.6e9 , 1,-2000,-9000)
+# test2 = particle('test2',0.5*mass_earth, radius_earth , 6*149.6e9 , 1,-7000,-15000)
+# test3 = particle('test3',0.5*mass_earth, radius_earth , 100*149.6e9 , 1,-9000,-8000)
 
 # add planets to planets to planets array and planet_draw_data
-planets = [Earth,Sun,test,test1,test2,test3]
-planet_draw_data = {Earth:([],[]), Sun:([],[]),test:([],[]),test1:([],[]),test2:([],[]),test3:([],[])}
+planets = [Earth,Sun, Mercury , Venus , Mars , Moon, Jupiter, Saturn, Uranus,Neptune]
+planet_draw_data = {Earth:([],[]), Sun:([],[]), Mercury:([],[]), Venus:([],[]) , Mars:([],[]), Moon:([],[]), Jupiter:([],[]), Saturn:([],[]), Uranus:([],[]),Neptune:([],[])}
 
 # define runtime in seconds
 
-run_time = 31536000
+run_time = 85*31536000
 run_sim(time_step,run_time,planets,planet_draw_data)
 draw_planets(planets, planet_draw_data)
