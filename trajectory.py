@@ -53,11 +53,12 @@ class particle ():
 
         self.update_distance()
 
-    def euler_cramer(self,time_step,planet,a_x = 0):
+    def euler_cramer(self,time_step,planet,a_x = 0,a_y = 0, air_resistance = None):
         g = planet.calc_acceleration(self)
         # g = planet.acceleration_through_planet(self)
-        a_x,a_y = planet.calc_acceleration_air_resistance(self)
-        print(a_x, self.vector_x[1])
+        if air_resistance == True:
+            a_x,a_y = planet.calc_acceleration_air_resistance(self)
+        print(a_x,a_y)
         if self.vector_y[0] > 0:
             self.vector_y[1] = self.vector_y[1] + (g+a_y)*time_step
             self.vector_y[0] = self.vector_y[0] + self.vector_y[1]*time_step
@@ -115,6 +116,9 @@ class grav_field():
         if particle.get_vector_y()[1] > 0:
             a_y = -1*a_y
 
+        if particle.get_vector_y()[0] > 2*radius_earth:
+            a_y = 0
+
 
         return (a_x , a_y)
 
@@ -127,9 +131,10 @@ class grav_field():
 
 
 earth = grav_field(mass_earth, radius_earth)
-start_velocity = float(input('How fast should the projectile be ? (in m/s):  '))
+start_velocity_x = float(input('How fast should the x-velocity of the projectile be ? (in m/s):  '))
+start_velocity_y = float(input('How fast should the y-velocity of the projectile be ? (in m/s):  '))
 start_height = float(input('What should the start height be ? (in m):  '))
-projectile = particle(0,0,radius_earth + start_height,start_velocity,0)
+projectile = particle(0,0,radius_earth + start_height,start_velocity_x,start_velocity_y)
 
 runtime = 0
 x_data = []
@@ -150,10 +155,10 @@ def animate(i):
     plt.xlabel('Distance (m)')
     plt.ylabel('Height above Earth surface (m)')
     plt.legend()
-    
+
 while runtime < 10000:
     runtime += time_step
-    projectile.euler_cramer(time_step, earth)
+    projectile.euler_cramer(time_step, earth, air_resistance = True)
     x_data.append(projectile.get_vector_x()[0])
     y_data.append(projectile.get_vector_y()[0] - earth.get_radius())
 
